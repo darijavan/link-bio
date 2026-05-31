@@ -17,11 +17,11 @@ pnpx prisma studio     # Visual DB browser
 
 ## Architecture
 
-**ig-bio** is a multi-user SaaS where Instagram Business/Creator accounts connect via OAuth and get a public link-in-bio page at `<username>.yoursite.com`. Posts are filtered by a per-user trigger phrase; the first bare URL in the caption becomes the outbound link.
+**ig-bio** is a multi-user SaaS where Instagram Business/Creator accounts connect via OAuth and get a public link-in-bio page at `yoursite.com/:username`. Posts are filtered by a per-user trigger phrase; the first bare URL in the caption becomes the outbound link.
 
 ### Routing
 
-`proxy.ts` (Next.js 16 replacement for the deprecated `middleware.ts`) intercepts non-`app`/`www` subdomains and rewrites them to `/[username]`, so `theatlantic.yoursite.com/` renders `app/[username]/page.tsx` with `params.username = "theatlantic"`. The exported function must be named `proxy` (not `middleware`).
+Path-based — no proxy/middleware needed. `app/[username]/page.tsx` handles public profile pages at `/:username`. Explicit routes (`/dashboard`, `/api/...`) take precedence over the dynamic segment in Next.js's routing hierarchy.
 
 ### Database
 

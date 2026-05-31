@@ -1,6 +1,6 @@
 # ig-bio
 
-A multi-user Instagram link-in-bio SaaS. Connect your Instagram Business or Creator account, set a trigger phrase, and get a public page at `<your-username>.yoursite.com` that automatically displays posts matching that phrase — each card linking to the URL found in the caption.
+A multi-user Instagram link-in-bio SaaS. Connect your Instagram Business or Creator account, set a trigger phrase, and get a public page at `yoursite.com/<your-username>` that automatically displays posts matching that phrase — each card linking to the URL found in the caption.
 
 ## How it works
 

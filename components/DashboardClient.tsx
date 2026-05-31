@@ -38,8 +38,8 @@ export function DashboardClient({ username, initialTriggerPhrase, lastSyncedAt }
   }
 
   const pageUrl = typeof window !== "undefined"
-    ? window.location.host.replace(/^app\./, `${username}.`)
-    : `${username}.yoursite.com`;
+    ? `${window.location.origin}/${username}`
+    : `https://yoursite.com/${username}`;
 
   return (
     <div className="space-y-8">
