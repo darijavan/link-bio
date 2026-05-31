@@ -24,7 +24,7 @@ export default async function ProfilePage({ params }: Props) {
   const { posts, nextCursor } = await getPostsPage(user.id);
 
   return (
-    <main className="max-w-screen-md mx-auto px-4 py-8">
+    <main className="max-w-3xl mx-auto px-4 py-8">
       <header className="mb-6 text-center">
         <h1 className="text-xl font-semibold">@{user.username}</h1>
       </header>
