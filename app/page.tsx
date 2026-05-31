@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth, signIn } from "@/lib/auth";
 
 export default async function Home() {
@@ -21,12 +22,17 @@ export default async function Home() {
         >
           <button
             type="submit"
-            className="w-full py-3 px-6 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+            className="w-full py-3 px-6 bg-linear-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
           >
             Connect with Instagram
           </button>
         </form>
       </div>
+
+      <footer className="absolute bottom-6 flex gap-4 text-xs text-gray-400">
+        <Link href="/privacy" className="hover:text-gray-600">Privacy Policy</Link>
+        <Link href="/terms" className="hover:text-gray-600">Terms of Service</Link>
+      </footer>
     </main>
   );
 }
