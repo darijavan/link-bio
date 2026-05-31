@@ -21,7 +21,7 @@ pnpx prisma studio     # Visual DB browser
 
 ### Routing
 
-`middleware.ts` intercepts non-`app`/`www` subdomains and rewrites them to `/[username]`, so `theatlantic.yoursite.com/` renders `app/[username]/page.tsx` with `params.username = "theatlantic"`.
+`proxy.ts` (Next.js 16 replacement for the deprecated `middleware.ts`) intercepts non-`app`/`www` subdomains and rewrites them to `/[username]`, so `theatlantic.yoursite.com/` renders `app/[username]/page.tsx` with `params.username = "theatlantic"`. The exported function must be named `proxy` (not `middleware`).
 
 ### Database
 
