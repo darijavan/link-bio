@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import type { NextAuthConfig } from "next-auth";
 import { prisma } from "@/lib/prisma";
+import { CustomInstagramProvider } from "@/lib/auth/instagram-provider";
 
 async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ token: string; expiresAt: Date }> {
   const res = await fetch(
@@ -12,66 +13,37 @@ async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ tok
   return { token: data.access_token, expiresAt };
 }
 
-async function fetchInstagramProfile(accessToken: string): Promise<{ id: string; username: string }> {
-  const res = await fetch(
-    `https://graph.instagram.com/me?fields=id,username&access_token=${accessToken}`
-  );
-  if (!res.ok) throw new Error("Failed to fetch Instagram profile");
-  return res.json();
-}
-
 const config: NextAuthConfig = {
   providers: [
-    {
-      id: "instagram",
-      name: "Instagram",
-      type: "oauth",
-      authorization: {
-        url: "https://api.instagram.com/oauth/authorize",
-        params: {
-          scope: "instagram_basic,pages_show_list",
-          response_type: "code",
-        },
-      },
-      token: "https://api.instagram.com/oauth/access_token",
-      userinfo: {
-        url: "https://graph.instagram.com/me",
-        params: { fields: "id,username" },
-      },
+    CustomInstagramProvider({
       clientId: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      profile(profile) {
-        return {
-          id: profile.id,
-          name: profile.username,
-          email: null,
-          image: null,
-        };
-      },
-    },
+    }),
   ],
   callbacks: {
-    async signIn({ account }) {
+    async signIn({ account, user }) {
       if (!account || account.provider !== "instagram") return false;
 
       try {
         const { token, expiresAt } = await exchangeForLongLivedToken(account.access_token!);
-        const profile = await fetchInstagramProfile(token);
+
+        // user.name is set to the Instagram username by our provider's profile() callback
+        const username = user.name!;
+        const instagramId = account.providerAccountId!;
 
         await prisma.user.upsert({
-          where: { instagramId: profile.id },
+          where: { instagramId },
           update: { accessToken: token, tokenExpiresAt: expiresAt },
           create: {
-            instagramId: profile.id,
-            username: profile.username,
+            instagramId,
+            username,
             accessToken: token,
             tokenExpiresAt: expiresAt,
           },
         });
 
-        // Store the long-lived token on the account object for the jwt callback
+        // Overwrite with the long-lived token so the jwt callback sees it
         (account as Record<string, unknown>).access_token = token;
-        account.providerAccountId = profile.id;
         return true;
       } catch {
         return false;
