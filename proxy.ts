@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const APP_SUBDOMAINS = new Set(["app", "www"]);
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest): NextResponse {
   const host = req.headers.get("host") ?? "";
   const hostname = host.split(":")[0];
   const parts = hostname.split(".");
