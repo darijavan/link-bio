@@ -1,6 +1,6 @@
 # Meta App Setup Guide
 
-Step-by-step guide to create a Meta developer app for ig-bio, based on the current [Instagram API with Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/) documentation. This flow does **not** require a Facebook Page — only an Instagram Professional account.
+Step-by-step guide to create a Meta developer app for link-bio, based on the current [Instagram API with Instagram Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/) documentation. This flow does **not** require a Facebook Page — only an Instagram Professional account.
 
 ---
 
@@ -32,7 +32,7 @@ Step-by-step guide to create a Meta developer app for ig-bio, based on the curre
 2. When asked "What do you want your app to do?", select **Other**
 3. Select app type **Business**
 4. Fill in:
-   - **App name**: e.g. `ig-bio`
+   - **App name**: e.g. `link-bio`
    - **App contact email**: your email
 5. Click **Create App** (you may be asked to re-enter your Facebook password)
 
@@ -143,7 +143,7 @@ git push origin main
 ### 12. Import the project on Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new) and sign in with GitHub (free Hobby plan is enough)
-2. Select the `ig-bio` repository → click **Import**
+2. Select the `link-bio` repository → click **Import**
 3. Leave the framework as **Next.js** — Vercel detects it automatically
 4. Before deploying, expand **Environment Variables** and add all six from your `.env`:
 
@@ -160,7 +160,7 @@ git push origin main
 
 ### 13. Add your Vercel URL as a redirect URI
 
-Once deployed, copy your Vercel URL (e.g. `https://ig-bio-abc.vercel.app`) and go back to Meta App Dashboard:
+Once deployed, copy your Vercel URL (e.g. `https://link-bio-abc.vercel.app`) and go back to Meta App Dashboard:
 
 1. **Instagram → API setup with Instagram login → Business login settings → OAuth redirect URIs**
 2. Add: `https://your-project.vercel.app/api/auth/callback/instagram

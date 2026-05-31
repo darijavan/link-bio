@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — ig-bio",
+  title: "Privacy Policy — link-bio",
 };
 
 const LAST_UPDATED = "May 31, 2026";
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
 
       <Section title="1. Overview">
         <p>
-          ig-bio (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;the Service&rdquo;) is a link-in-bio
+          link-bio (&ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;the Service&rdquo;) is a link-in-bio
           tool that connects to your Instagram account and displays your posts on a public page. This
           policy explains what data we collect, how we use it, and your rights over it.
         </p>
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>To display your public page:</strong> synced post thumbnails and links are shown
-            at your public ig-bio URL.
+            at your public link-bio URL.
           </li>
           <li>
             <strong>To keep tokens valid:</strong> we refresh your Instagram access token before it
@@ -130,7 +130,7 @@ export default function PrivacyPage() {
           <li>Request correction of inaccurate data</li>
           <li>Request deletion of your account and all associated data</li>
           <li>
-            Revoke ig-bio&apos;s access to your Instagram account via Instagram Settings →
+            Revoke link-bio&apos;s access to your Instagram account via Instagram Settings →
             Apps and Websites
           </li>
         </ul>

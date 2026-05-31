@@ -17,7 +17,7 @@ pnpx prisma studio     # Visual DB browser
 
 ## Architecture
 
-**ig-bio** is a multi-user SaaS where Instagram Business/Creator accounts connect via OAuth and get a public link-in-bio page at `yoursite.com/:username`. Posts are filtered by a per-user trigger phrase; the first bare URL in the caption becomes the outbound link.
+**link-bio** is a multi-user SaaS where Instagram Business/Creator accounts connect via OAuth and get a public link-in-bio page at `yoursite.com/:username`. Posts are filtered by a per-user trigger phrase; the first bare URL in the caption becomes the outbound link.
 
 ### Routing
 

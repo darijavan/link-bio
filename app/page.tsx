@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <main className="flex flex-col flex-1 items-center justify-center min-h-screen bg-white px-4">
       <div className="max-w-sm w-full text-center space-y-6">
-        <h1 className="text-3xl font-bold tracking-tight">ig-bio</h1>
+        <h1 className="text-3xl font-bold tracking-tight">link-bio</h1>
         <p className="text-gray-500">
           Turn your Instagram posts into a beautiful link-in-bio page — automatically.
         </p>

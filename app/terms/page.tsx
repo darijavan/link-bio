@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — ig-bio",
+  title: "Terms of Service — link-bio",
 };
 
 const LAST_UPDATED = "May 31, 2026";
@@ -19,14 +19,14 @@ export default function TermsPage() {
 
       <Section title="1. Acceptance">
         <p>
-          By connecting your Instagram account or using ig-bio in any way, you agree to these Terms
+          By connecting your Instagram account or using link-bio in any way, you agree to these Terms
           of Service. If you do not agree, do not use the Service.
         </p>
       </Section>
 
       <Section title="2. Description of Service">
         <p>
-          ig-bio is a link-in-bio tool that connects to your Instagram Professional account via the
+          link-bio is a link-in-bio tool that connects to your Instagram Professional account via the
           Instagram Graph API. It periodically fetches your posts, filters them by a trigger phrase
           you configure, and displays them as a clickable grid at a public URL. Each post card links
           to a URL extracted from your post caption.
@@ -85,14 +85,14 @@ export default function TermsPage() {
           </li>
         </ul>
         <p className="mt-3">
-          You are solely responsible for ensuring that the content published through your ig-bio
+          You are solely responsible for ensuring that the content published through your link-bio
           page complies with all applicable Meta policies and laws.
         </p>
       </Section>
 
       <Section title="5. Your Responsibilities">
         <ul className="list-disc pl-5 space-y-1">
-          <li>You are responsible for all content that appears on your ig-bio page.</li>
+          <li>You are responsible for all content that appears on your link-bio page.</li>
           <li>
             You must not use the Service to distribute illegal content, spam, malware, or content
             that infringes third-party intellectual property rights.
@@ -111,7 +111,7 @@ export default function TermsPage() {
         <p>
           To operate the Service, we store an Instagram access token issued to your account. You can
           revoke this access at any time via Instagram Settings → Apps and Websites. Revoking access
-          will cause your ig-bio page to stop syncing new posts, and you may request deletion of
+          will cause your link-bio page to stop syncing new posts, and you may request deletion of
           your stored data by contacting us.
         </p>
       </Section>
@@ -131,7 +131,7 @@ export default function TermsPage() {
 
       <Section title="8. Intellectual Property">
         <p>
-          The ig-bio application code, design, and branding are our intellectual property. Your
+          The link-bio application code, design, and branding are our intellectual property. Your
           Instagram content remains yours — we do not claim ownership of any posts, images, or
           captions fetched through the API.
         </p>
@@ -139,7 +139,7 @@ export default function TermsPage() {
 
       <Section title="9. Limitation of Liability">
         <p>
-          To the maximum extent permitted by law, ig-bio and its operators shall not be liable for
+          To the maximum extent permitted by law, link-bio and its operators shall not be liable for
           any indirect, incidental, special, consequential, or punitive damages arising from your
           use of or inability to use the Service, including but not limited to loss of data, loss of
           revenue, or reputational harm.
@@ -157,7 +157,7 @@ export default function TermsPage() {
           Terms, violate Meta&apos;s platform policies, or if we are required to do so by law.
         </p>
         <p className="mt-3">
-          You may terminate your account at any time by revoking ig-bio&apos;s access via Instagram
+          You may terminate your account at any time by revoking link-bio&apos;s access via Instagram
           and requesting data deletion at the contact address below.
         </p>
       </Section>

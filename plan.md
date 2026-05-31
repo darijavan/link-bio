@@ -1,4 +1,4 @@
-# Plan: ig-bio — Instagram Link-in-Bio SaaS
+# Plan: link-bio — Instagram Link-in-Bio SaaS
 
 ## Context
 
@@ -82,7 +82,7 @@ model Post {
 ### 1. Project Bootstrap
 
 ```bash
-npx create-next-app@latest ig-bio --typescript --tailwind --app
+npx create-next-app@latest link-bio --typescript --tailwind --app
 npm install prisma @prisma/client next-auth @auth/prisma-adapter
 npx prisma init
 ```

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ig-bio",
+  title: "link-bio",
   description: "Your Instagram posts, as a link-in-bio page.",
 };
 
