@@ -49,7 +49,7 @@ export function VideoTabIcon({ active }: TabIconProps) {
         strokeWidth="1.8"
       />
       <path
-        d="M10 8.6v6.8c0 .6.6 1 1.1.7l5.3-3.4c.4-.3.4-1 0-1.3l-5.3-3.4c-.5-.3-1.1 0-1.1.6z"
+        d="M9 8.6v6.8c0 .6.6 1 1.1.7l5.3-3.4c.4-.3.4-1 0-1.3l-5.3-3.4c-.5-.3-1.1 0-1.1.6z"
         fill={active ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth="1"
