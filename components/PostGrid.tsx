@@ -87,7 +87,7 @@ export function PostGrid({ username, initialPosts, initialNextCursor }: PostGrid
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-1">
+      <div className="grid grid-cols-3 gap-1 p-1 md:p-0">
         {posts.map((post) => (
           <a
             key={post.instagramPostId}
