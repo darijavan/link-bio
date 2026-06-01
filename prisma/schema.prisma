@@ -14,6 +14,7 @@ model User {
   accessToken    String
   tokenExpiresAt DateTime
   triggerPhrase  String    @default("Link in bio 🔗")
+  logoUrl        String?
   createdAt      DateTime  @default(now())
   lastSyncedAt   DateTime?
   posts          Post[]

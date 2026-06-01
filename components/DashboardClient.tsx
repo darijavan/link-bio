@@ -5,24 +5,40 @@ import { useState, useTransition } from "react";
 interface Props {
   username: string;
   initialTriggerPhrase: string;
+  initialLogoUrl: string | null;
   lastSyncedAt: string | null;
 }
 
-export function DashboardClient({ username, initialTriggerPhrase, lastSyncedAt }: Props) {
+export function DashboardClient({
+  username,
+  initialTriggerPhrase,
+  initialLogoUrl,
+  lastSyncedAt,
+}: Props) {
   const [triggerPhrase, setTriggerPhrase] = useState(initialTriggerPhrase);
+  const [logoUrl, setLogoUrl] = useState(initialLogoUrl ?? "");
   const [saved, setSaved] = useState(false);
+  const [settingsError, setSettingsError] = useState<string | null>(null);
   const [syncResult, setSyncResult] = useState<{ synced: number; updatedAt: string } | null>(null);
   const [isPending, startTransition] = useTransition();
+  const canSaveSettings = Boolean(triggerPhrase.trim());
 
-  async function saveTriggerPhrase() {
+  async function saveSettings() {
+    setSettingsError(null);
     const res = await fetch("/api/user/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ triggerPhrase }),
+      body: JSON.stringify({ triggerPhrase, logoUrl }),
     });
     if (res.ok) {
+      const data = await res.json();
+      setTriggerPhrase(data.triggerPhrase);
+      setLogoUrl(data.logoUrl ?? "");
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
+    } else {
+      const data = await res.json().catch(() => null);
+      setSettingsError(data?.error ?? "Could not save settings");
     }
   }
 
@@ -49,25 +65,40 @@ export function DashboardClient({ username, initialTriggerPhrase, lastSyncedAt }
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
-          Trigger phrase
-        </h2>
-        <p className="text-sm text-gray-600 mb-3">
-          Posts whose caption contains this phrase will appear on your page.
-        </p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={triggerPhrase}
-            onChange={(e) => setTriggerPhrase(e.target.value)}
-            className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
-          />
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Settings</h2>
+        <div className="space-y-5">
+          <label className="block">
+            <span className="block text-sm font-medium text-gray-800 mb-1">Logo URL</span>
+            <input
+              type="url"
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder={`No logo set, showing @${username}`}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </label>
+
+          <label className="block">
+            <span className="block text-sm font-medium text-gray-800 mb-1">Trigger phrase</span>
+            <span className="block text-sm text-gray-600 mb-2">
+              Posts whose caption contains this phrase will appear on your page.
+            </span>
+            <input
+              type="text"
+              value={triggerPhrase}
+              onChange={(e) => setTriggerPhrase(e.target.value)}
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </label>
+
+          {settingsError && <p className="text-sm text-red-600">{settingsError}</p>}
+
           <button
-            onClick={saveTriggerPhrase}
-            disabled={!triggerPhrase.trim()}
+            onClick={saveSettings}
+            disabled={!canSaveSettings}
             className="px-4 py-2 bg-black text-white text-sm rounded hover:bg-gray-800 disabled:opacity-50"
           >
-            {saved ? "Saved!" : "Save"}
+            {saved ? "Saved!" : "Save settings"}
           </button>
         </div>
       </section>

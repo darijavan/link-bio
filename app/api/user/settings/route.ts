@@ -8,15 +8,34 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { triggerPhrase } = await req.json();
+  const { triggerPhrase, logoUrl } = await req.json();
   if (typeof triggerPhrase !== "string" || !triggerPhrase.trim()) {
     return NextResponse.json({ error: "Invalid trigger phrase" }, { status: 400 });
   }
 
+  if (logoUrl !== null && logoUrl !== undefined && typeof logoUrl !== "string") {
+    return NextResponse.json({ error: "Invalid logo URL" }, { status: 400 });
+  }
+
+  const normalizedLogoUrl = typeof logoUrl === "string" ? logoUrl.trim() : null;
+  if (normalizedLogoUrl) {
+    try {
+      const parsedLogoUrl = new URL(normalizedLogoUrl);
+      if (parsedLogoUrl.protocol !== "https:") {
+        return NextResponse.json({ error: "Logo URL must use HTTPS" }, { status: 400 });
+      }
+    } catch {
+      return NextResponse.json({ error: "Invalid logo URL" }, { status: 400 });
+    }
+  }
+
   const user = await prisma.user.update({
     where: { id: session.user.id },
-    data: { triggerPhrase: triggerPhrase.trim() },
-    select: { triggerPhrase: true },
+    data: {
+      triggerPhrase: triggerPhrase.trim(),
+      ...(logoUrl !== undefined && { logoUrl: normalizedLogoUrl || null }),
+    },
+    select: { triggerPhrase: true, logoUrl: true },
   });
 
   return NextResponse.json(user);
