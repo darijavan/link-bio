@@ -25,6 +25,7 @@ model Post {
   userId          String
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   thumbnailUrl    String
+  mediaType       String   @default("IMAGE")
   caption         String
   extractedUrl    String
   postedAt        DateTime

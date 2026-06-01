@@ -8,6 +8,7 @@ export interface PostPage {
     id: string;
     instagramPostId: string;
     thumbnailUrl: string;
+    mediaType: string;
     caption: string;
     extractedUrl: string;
     postedAt: string;
@@ -30,13 +31,14 @@ function makeGetPostsPage(userId: string) {
           id: true,
           instagramPostId: true,
           thumbnailUrl: true,
+          mediaType: true,
           caption: true,
           extractedUrl: true,
           postedAt: true,
         },
       });
 
-      type Row = { id: string; instagramPostId: string; thumbnailUrl: string; caption: string; extractedUrl: string; postedAt: Date };
+      type Row = { id: string; instagramPostId: string; thumbnailUrl: string; mediaType: string; caption: string; extractedUrl: string; postedAt: Date };
       const hasMore = rows.length > PAGE_SIZE;
       const posts = (rows as Row[]).slice(0, PAGE_SIZE).map((p) => ({
         ...p,

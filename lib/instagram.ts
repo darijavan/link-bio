@@ -7,6 +7,7 @@ interface InstagramMedia {
   id: string;
   caption?: string;
   media_url: string;
+  media_type?: string;
   thumbnail_url?: string;
   timestamp: string;
 }
@@ -21,7 +22,7 @@ interface InstagramMediaPage {
 function buildMediaUrl(accessToken: string): string {
   const url = new URL("https://graph.instagram.com/me/media");
   url.search = new URLSearchParams({
-    fields: "id,caption,media_url,thumbnail_url,timestamp",
+    fields: "id,caption,media_url,media_type,thumbnail_url,timestamp",
     access_token: accessToken,
     limit: "100",
   }).toString();
@@ -71,6 +72,7 @@ export async function syncPostsForUser(userId: string): Promise<number> {
             where: { instagramPostId: p.id },
             update: {
               thumbnailUrl: p.imageUrl,
+              mediaType: p.media_type ?? "IMAGE",
               caption: p.caption ?? "",
               extractedUrl: p.extractedUrl,
               cachedAt: new Date(),
@@ -79,6 +81,7 @@ export async function syncPostsForUser(userId: string): Promise<number> {
               userId,
               instagramPostId: p.id,
               thumbnailUrl: p.imageUrl,
+              mediaType: p.media_type ?? "IMAGE",
               caption: p.caption ?? "",
               extractedUrl: p.extractedUrl,
               postedAt: new Date(p.timestamp),
