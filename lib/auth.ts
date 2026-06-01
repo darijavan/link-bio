@@ -39,7 +39,7 @@ const config: NextAuthConfig = {
         const username = user.name!;
         const instagramId = account.providerAccountId!;
 
-        await prisma.user.upsert({
+        const dbUser = await prisma.user.upsert({
           where: { instagramId },
           update: { accessToken: token, tokenExpiresAt: expiresAt },
           create: {
@@ -48,7 +48,11 @@ const config: NextAuthConfig = {
             accessToken: token,
             tokenExpiresAt: expiresAt,
           },
+          select: { id: true, username: true },
         });
+
+        user.id = dbUser.id;
+        user.name = dbUser.username;
 
         // Overwrite with the long-lived token so the jwt callback sees it
         (account as Record<string, unknown>).access_token = token;
@@ -58,18 +62,28 @@ const config: NextAuthConfig = {
       }
     },
     async session({ session, token }) {
-      if (token.sub) {
-        const user = await prisma.user.findUnique({ where: { instagramId: token.sub } });
-        if (user) {
-          session.user.id = user.id;
-          session.user.name = user.username;
-        }
+      if (typeof token.userId === "string") {
+        session.user.id = token.userId;
+      }
+      if (typeof token.username === "string") {
+        session.user.name = token.username;
       }
       return session;
     },
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account?.providerAccountId) {
         token.sub = account.providerAccountId;
+        token.userId = user.id;
+        token.username = user.name;
+      } else if (token.sub && !token.userId) {
+        const dbUser = await prisma.user.findUnique({
+          where: { instagramId: token.sub },
+          select: { id: true, username: true },
+        });
+        if (dbUser) {
+          token.userId = dbUser.id;
+          token.username = dbUser.username;
+        }
       }
       return token;
     },
