@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import type { NextAuthConfig } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { CustomInstagramProvider } from "@/lib/auth/instagram-provider";
+import { getPublicProfileCacheTag } from "@/lib/public-profile";
 
 async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ token: string; expiresAt: Date }> {
   const clientSecret = process.env.INSTAGRAM_APP_SECRET;
@@ -53,6 +55,7 @@ const config: NextAuthConfig = {
 
         user.id = dbUser.id;
         user.name = dbUser.username;
+        revalidateTag(getPublicProfileCacheTag(dbUser.username), "default");
 
         // Overwrite with the long-lived token so the jwt callback sees it
         (account as Record<string, unknown>).access_token = token;

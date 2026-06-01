@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getPublicProfileCacheTag } from "@/lib/public-profile";
 
 export async function PATCH(req: NextRequest) {
   const session = await auth();
@@ -35,8 +37,10 @@ export async function PATCH(req: NextRequest) {
       triggerPhrase: triggerPhrase.trim(),
       ...(logoUrl !== undefined && { logoUrl: normalizedLogoUrl || null }),
     },
-    select: { triggerPhrase: true, logoUrl: true },
+    select: { username: true, triggerPhrase: true, logoUrl: true },
   });
+
+  revalidateTag(getPublicProfileCacheTag(user.username), "default");
 
   return NextResponse.json(user);
 }

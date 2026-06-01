@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 import { getPostsPage } from "@/lib/posts";
+import { getPublicProfile } from "@/lib/public-profile";
 import { PostGrid } from "@/components/PostGrid";
 
 interface Props {
@@ -16,10 +16,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function ProfilePage({ params }: Props) {
   const { username } = await params;
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: { id: true, username: true, logoUrl: true },
-  });
+  const user = await getPublicProfile(username);
   if (!user) notFound();
 
   const { posts, nextCursor } = await getPostsPage(user.id);

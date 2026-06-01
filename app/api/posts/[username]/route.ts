@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { getPostsPage } from "@/lib/posts";
+import { getPublicProfile } from "@/lib/public-profile";
 
 export async function GET(
   req: NextRequest,
@@ -9,7 +9,7 @@ export async function GET(
   const { username } = await params;
   const cursor = req.nextUrl.searchParams.get("cursor") ?? undefined;
 
-  const user = await prisma.user.findUnique({ where: { username }, select: { id: true } });
+  const user = await getPublicProfile(username);
   if (!user) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
