@@ -46,9 +46,19 @@ export function CustomInstagramProvider(
           body,
         });
 
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({}));
+          throw new Error(`Instagram token exchange failed: ${res.status} ${JSON.stringify(error)}`);
+        }
+
         const data = await res.json();
-        // Instagram omits token_type — Auth.js requires it
-        return { tokens: { ...data, token_type: 'bearer' } };
+
+        // Instagram Business Login wraps the token in data[0] rather than
+        // returning a flat OAuth2 response. Normalize it so Auth.js can find
+        // access_token at the top level.
+        const tokenData = Array.isArray(data?.data) ? data.data[0] : data;
+
+        return { tokens: { ...tokenData, token_type: 'bearer' } };
       },
     },
     userinfo: {
