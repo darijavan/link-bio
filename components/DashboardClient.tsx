@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { signOut } from "next-auth/react";
 
 interface Props {
   username: string;
@@ -103,6 +104,16 @@ export function DashboardClient({
             {saved ? "Saved!" : "Save settings"}
           </button>
         </div>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Account</h2>
+        <button
+          onClick={() => signOut({ redirectTo: "/" })}
+          className="text-sm text-gray-500 underline hover:text-gray-800"
+        >
+          Sign out
+        </button>
       </section>
 
       <section>
