@@ -4,9 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { CustomInstagramProvider } from "@/lib/auth/instagram-provider";
 
 async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ token: string; expiresAt: Date }> {
-  const res = await fetch(
-    `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_APP_SECRET}&access_token=${shortLivedToken}`
-  );
+  const clientSecret = process.env.INSTAGRAM_APP_SECRET;
+  if (!clientSecret) throw new Error("Missing INSTAGRAM_APP_SECRET");
+
+  const url = new URL("https://graph.instagram.com/access_token");
+  url.search = new URLSearchParams({
+    grant_type: "ig_exchange_token",
+    client_secret: clientSecret,
+    access_token: shortLivedToken,
+  }).toString();
+
+  const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to exchange Instagram token");
   const data = await res.json();
   const expiresAt = new Date(Date.now() + data.expires_in * 1000);

@@ -12,10 +12,14 @@ interface InstagramMedia {
 }
 
 export async function fetchUserMedia(accessToken: string): Promise<InstagramMedia[]> {
-  const res = await fetch(
-    `https://graph.instagram.com/me/media?fields=id,caption,media_url,thumbnail_url,timestamp&access_token=${accessToken}&limit=100`,
-    { cache: "no-store" }
-  );
+  const url = new URL("https://graph.instagram.com/me/media");
+  url.search = new URLSearchParams({
+    fields: "id,caption,media_url,thumbnail_url,timestamp",
+    access_token: accessToken,
+    limit: "100",
+  }).toString();
+
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Instagram API error: ${res.status}`);
   const data = await res.json();
   return data.data ?? [];
@@ -72,9 +76,13 @@ export async function refreshTokenIfNeeded(userId: string): Promise<void> {
   const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   if (user.tokenExpiresAt > sevenDaysFromNow) return;
 
-  const res = await fetch(
-    `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${user.accessToken}`
-  );
+  const url = new URL("https://graph.instagram.com/refresh_access_token");
+  url.search = new URLSearchParams({
+    grant_type: "ig_refresh_token",
+    access_token: user.accessToken,
+  }).toString();
+
+  const res = await fetch(url);
   if (!res.ok) return;
 
   const data = await res.json();
