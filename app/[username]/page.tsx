@@ -39,7 +39,7 @@ export default async function ProfilePage({ params }: Props) {
       </header>
 
       <div className="mx-auto w-full max-w-170">
-        <p className="px-2 py-2 text-center text-sm leading-4.5 text-[#666]">
+        <p className="my-4 px-2 py-2 text-center text-sm leading-4.5 text-[#666]">
           Click on media to view link
         </p>
 
