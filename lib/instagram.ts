@@ -11,7 +11,14 @@ interface InstagramMedia {
   timestamp: string;
 }
 
-export async function fetchUserMedia(accessToken: string): Promise<InstagramMedia[]> {
+interface InstagramMediaPage {
+  data?: InstagramMedia[];
+  paging?: {
+    next?: string;
+  };
+}
+
+function buildMediaUrl(accessToken: string): string {
   const url = new URL("https://graph.instagram.com/me/media");
   url.search = new URLSearchParams({
     fields: "id,caption,media_url,thumbnail_url,timestamp",
@@ -19,47 +26,70 @@ export async function fetchUserMedia(accessToken: string): Promise<InstagramMedi
     limit: "100",
   }).toString();
 
+  return url.toString();
+}
+
+async function fetchUserMediaPage(url: string): Promise<InstagramMediaPage> {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Instagram API error: ${res.status}`);
-  const data = await res.json();
-  return data.data ?? [];
+  return res.json();
+}
+
+export async function fetchUserMedia(accessToken: string): Promise<InstagramMedia[]> {
+  const media: InstagramMedia[] = [];
+  let nextUrl: string | null = buildMediaUrl(accessToken);
+
+  while (nextUrl) {
+    const page = await fetchUserMediaPage(nextUrl);
+    media.push(...(page.data ?? []));
+    nextUrl = page.paging?.next ?? null;
+  }
+
+  return media;
 }
 
 export async function syncPostsForUser(userId: string): Promise<number> {
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
-  const media = await fetchUserMedia(user.accessToken);
+  let synced = 0;
+  let nextUrl: string | null = buildMediaUrl(user.accessToken);
 
-  const filtered = media
-    .filter((p) => p.caption?.includes(user.triggerPhrase))
-    .map((p) => ({
-      ...p,
-      extractedUrl: p.caption?.match(URL_REGEX)?.[0] ?? null,
-      imageUrl: p.thumbnail_url ?? p.media_url,
-    }))
-    .filter((p): p is typeof p & { extractedUrl: string } => p.extractedUrl !== null);
+  while (nextUrl) {
+    const page = await fetchUserMediaPage(nextUrl);
+    const filtered = (page.data ?? [])
+      .filter((p) => p.caption?.includes(user.triggerPhrase))
+      .map((p) => ({
+        ...p,
+        extractedUrl: p.caption?.match(URL_REGEX)?.[0] ?? null,
+        imageUrl: p.thumbnail_url ?? p.media_url,
+      }))
+      .filter((p): p is typeof p & { extractedUrl: string } => p.extractedUrl !== null);
 
-  if (filtered.length > 0) {
-    await prisma.$transaction(
-      filtered.map((p) =>
-        prisma.post.upsert({
-          where: { instagramPostId: p.id },
-          update: {
-            thumbnailUrl: p.imageUrl,
-            caption: p.caption ?? "",
-            extractedUrl: p.extractedUrl,
-            cachedAt: new Date(),
-          },
-          create: {
-            userId,
-            instagramPostId: p.id,
-            thumbnailUrl: p.imageUrl,
-            caption: p.caption ?? "",
-            extractedUrl: p.extractedUrl,
-            postedAt: new Date(p.timestamp),
-          },
-        })
-      )
-    );
+    if (filtered.length > 0) {
+      await prisma.$transaction(
+        filtered.map((p) =>
+          prisma.post.upsert({
+            where: { instagramPostId: p.id },
+            update: {
+              thumbnailUrl: p.imageUrl,
+              caption: p.caption ?? "",
+              extractedUrl: p.extractedUrl,
+              cachedAt: new Date(),
+            },
+            create: {
+              userId,
+              instagramPostId: p.id,
+              thumbnailUrl: p.imageUrl,
+              caption: p.caption ?? "",
+              extractedUrl: p.extractedUrl,
+              postedAt: new Date(p.timestamp),
+            },
+          })
+        )
+      );
+      synced += filtered.length;
+    }
+
+    nextUrl = page.paging?.next ?? null;
   }
 
   await prisma.user.update({
@@ -68,7 +98,7 @@ export async function syncPostsForUser(userId: string): Promise<number> {
   });
 
   revalidateTag(`posts-${userId}`, "default");
-  return filtered.length;
+  return synced;
 }
 
 export async function refreshTokenIfNeeded(userId: string): Promise<void> {
