@@ -22,7 +22,7 @@ export default async function Home() {
         >
           <button
             type="submit"
-            className="w-full py-3 px-6 bg-linear-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+            className="w-full py-3 px-6 bg-linear-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold rounded-xl hover:opacity-80 transition-opacity cursor-pointer"
           >
             Connect with Instagram
           </button>
