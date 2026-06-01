@@ -27,38 +27,24 @@ export function CustomInstagramProvider(
         response_type: 'code',
       },
     },
+    client: {
+      token_endpoint_auth_method: 'client_secret_post',
+    },
     token: {
       url: 'https://api.instagram.com/oauth/access_token',
-      async request(context: {
-        params: { code?: string; [key: string]: string | undefined };
-        provider: { callbackUrl: string };
-      }) {
-        const body = new URLSearchParams({
-          client_id: options.clientId!,
-          client_secret: options.clientSecret!,
-          grant_type: 'authorization_code',
-          redirect_uri: context.provider.callbackUrl,
-          code: context.params.code!,
-        });
-
-        const res = await fetch('https://api.instagram.com/oauth/access_token', {
-          method: 'POST',
-          body,
-        });
-
-        if (!res.ok) {
-          const error = await res.json().catch(() => ({}));
-          throw new Error(`Instagram token exchange failed: ${res.status} ${JSON.stringify(error)}`);
-        }
-
-        const data = await res.json();
-
+      async conform(response: Response) {
         // Instagram Business Login wraps the token in data[0] rather than
         // returning a flat OAuth2 response. Normalize it so Auth.js can find
         // access_token at the top level.
+        if (!response.ok) return response;
+
+        const data = await response.json();
         const tokenData = Array.isArray(data?.data) ? data.data[0] : data;
 
-        return { tokens: { ...tokenData, token_type: 'bearer' } };
+        return Response.json(
+          { ...tokenData, token_type: tokenData?.token_type ?? 'bearer' },
+          response
+        );
       },
     },
     userinfo: {
