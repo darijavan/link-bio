@@ -23,16 +23,17 @@ export default async function ProfilePage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-white">
-      <header className="flex justify-start border-b border-[#ddd] px-4 py-4 md:justify-center">
-        {user.logoUrl ? (
-          <img
-            src={user.logoUrl}
-            alt={`${user.username} logo`}
-            className="h-8 max-w-45 object-contain"
-          />
-        ) : (
-          <span className="text-sm font-medium leading-8 text-[#2a2a2a]">@{user.username}</span>
-        )}
+      <header className="flex justify-center border-b border-[#ddd] px-4 py-4">
+        <a href={`https://www.instagram.com/${user.username}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
+          {user.logoUrl && (
+            <img
+              src={user.logoUrl}
+              alt={`${user.username} logo`}
+              className="h-8 max-w-45 object-contain rounded-full"
+            />
+          )}
+          <span className={`text-sm font-medium leading-8 text-[#2a2a2a] ${user.logoUrl ? "ml-2" : ""}`}>@{user.username}</span>
+        </a>
       </header>
 
       <div className="mx-auto w-full max-w-170">
