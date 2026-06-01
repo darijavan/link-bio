@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 export interface PublicProfile {
   id: string;
   username: string;
-  logoUrl: string | null;
+  profilePictureUrl: string | null;
+  headerText: string | null;
 }
 
 export function getPublicProfileCacheTag(username: string) {
@@ -16,7 +17,7 @@ function makeGetPublicProfile(username: string) {
     async (): Promise<PublicProfile | null> => {
       return prisma.user.findUnique({
         where: { username },
-        select: { id: true, username: true, logoUrl: true },
+        select: { id: true, username: true, profilePictureUrl: true, headerText: true },
       });
     },
     [`public-profile-${username}`],

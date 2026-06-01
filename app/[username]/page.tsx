@@ -10,7 +10,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { username } = await params;
-  return { title: `@${username}` };
+  const user = await getPublicProfile(username);
+  return { title: user?.headerText?.trim() || `@${username}` };
 }
 
 export default async function ProfilePage({ params }: Props) {
@@ -20,19 +21,22 @@ export default async function ProfilePage({ params }: Props) {
   if (!user) notFound();
 
   const { posts, nextCursor } = await getPostsPage(user.id);
+  const headerLabel = user.headerText?.trim() || `@${user.username}`;
 
   return (
     <main className="min-h-screen bg-white">
       <header className="flex justify-center border-b border-[#ddd] px-4 py-4">
         <a href={`https://www.instagram.com/${user.username}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
-          {user.logoUrl && (
+          {user.profilePictureUrl && (
             <img
-              src={user.logoUrl}
-              alt={`${user.username} logo`}
-              className="h-8 max-w-45 object-contain rounded-full"
+              src={user.profilePictureUrl}
+              alt={`${user.username} profile picture`}
+              className="h-8 w-8 rounded-full object-cover"
             />
           )}
-          <span className={`text-sm font-medium leading-8 text-[#2a2a2a] ${user.logoUrl ? "ml-2" : ""}`}>@{user.username}</span>
+          <span className={`text-sm font-medium leading-8 text-[#2a2a2a] ${user.profilePictureUrl ? "ml-2" : ""}`}>
+            {headerLabel}
+          </span>
         </a>
       </header>
 

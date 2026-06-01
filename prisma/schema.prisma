@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  instagramId    String    @unique
-  username       String    @unique
-  accessToken    String
-  tokenExpiresAt DateTime
-  triggerPhrase  String    @default("Link in bio 🔗")
-  logoUrl        String?
-  createdAt      DateTime  @default(now())
-  lastSyncedAt   DateTime?
-  posts          Post[]
+  id                String    @id @default(cuid())
+  instagramId       String    @unique
+  username          String    @unique
+  accessToken       String
+  tokenExpiresAt    DateTime
+  triggerPhrase     String    @default("Link in bio 🔗")
+  profilePictureUrl String?
+  headerText        String?
+  createdAt         DateTime  @default(now())
+  lastSyncedAt      DateTime?
+  posts             Post[]
 }
 
 model Post {

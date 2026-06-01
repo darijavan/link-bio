@@ -37,18 +37,20 @@ const config: NextAuthConfig = {
       try {
         const { token, expiresAt } = await exchangeForLongLivedToken(account.access_token!);
 
-        // user.name is set to the Instagram username by our provider's profile() callback
+        // user.name and user.image are set by our provider's profile() callback.
         const username = user.name!;
         const instagramId = account.providerAccountId!;
+        const profilePictureUrl = user.image?.trim() || null;
 
         const dbUser = await prisma.user.upsert({
           where: { instagramId },
-          update: { accessToken: token, tokenExpiresAt: expiresAt },
+          update: { accessToken: token, tokenExpiresAt: expiresAt, profilePictureUrl },
           create: {
             instagramId,
             username,
             accessToken: token,
             tokenExpiresAt: expiresAt,
+            profilePictureUrl,
           },
           select: { id: true, username: true },
         });

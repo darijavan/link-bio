@@ -10,34 +10,27 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { triggerPhrase, logoUrl } = await req.json();
+  const { triggerPhrase, headerText } = await req.json();
   if (typeof triggerPhrase !== "string" || !triggerPhrase.trim()) {
     return NextResponse.json({ error: "Invalid trigger phrase" }, { status: 400 });
   }
 
-  if (logoUrl !== null && logoUrl !== undefined && typeof logoUrl !== "string") {
-    return NextResponse.json({ error: "Invalid logo URL" }, { status: 400 });
+  if (headerText !== null && headerText !== undefined && typeof headerText !== "string") {
+    return NextResponse.json({ error: "Invalid header text" }, { status: 400 });
   }
 
-  const normalizedLogoUrl = typeof logoUrl === "string" ? logoUrl.trim() : null;
-  if (normalizedLogoUrl) {
-    try {
-      const parsedLogoUrl = new URL(normalizedLogoUrl);
-      if (parsedLogoUrl.protocol !== "https:") {
-        return NextResponse.json({ error: "Logo URL must use HTTPS" }, { status: 400 });
-      }
-    } catch {
-      return NextResponse.json({ error: "Invalid logo URL" }, { status: 400 });
-    }
+  const normalizedHeaderText = typeof headerText === "string" ? headerText.trim() : null;
+  if (normalizedHeaderText && normalizedHeaderText.length > 80) {
+    return NextResponse.json({ error: "Header text must be 80 characters or fewer" }, { status: 400 });
   }
 
   const user = await prisma.user.update({
     where: { id: session.user.id },
     data: {
       triggerPhrase: triggerPhrase.trim(),
-      ...(logoUrl !== undefined && { logoUrl: normalizedLogoUrl || null }),
+      ...(headerText !== undefined && { headerText: normalizedHeaderText || null }),
     },
-    select: { username: true, triggerPhrase: true, logoUrl: true },
+    select: { username: true, triggerPhrase: true, headerText: true },
   });
 
   revalidateTag(getPublicProfileCacheTag(user.username), "default");

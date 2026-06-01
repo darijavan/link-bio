@@ -5,35 +5,35 @@ import { useState, useTransition } from "react";
 interface Props {
   username: string;
   initialTriggerPhrase: string;
-  initialLogoUrl: string | null;
+  initialHeaderText: string | null;
   lastSyncedAt: string | null;
 }
 
 export function DashboardClient({
   username,
   initialTriggerPhrase,
-  initialLogoUrl,
+  initialHeaderText,
   lastSyncedAt,
 }: Props) {
   const [triggerPhrase, setTriggerPhrase] = useState(initialTriggerPhrase);
-  const [logoUrl, setLogoUrl] = useState(initialLogoUrl ?? "");
+  const [headerText, setHeaderText] = useState(initialHeaderText ?? "");
   const [saved, setSaved] = useState(false);
   const [settingsError, setSettingsError] = useState<string | null>(null);
   const [syncResult, setSyncResult] = useState<{ synced: number; updatedAt: string } | null>(null);
   const [isPending, startTransition] = useTransition();
-  const canSaveSettings = Boolean(triggerPhrase.trim());
+  const canSaveSettings = Boolean(triggerPhrase.trim()) && headerText.trim().length <= 80;
 
   async function saveSettings() {
     setSettingsError(null);
     const res = await fetch("/api/user/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ triggerPhrase, logoUrl }),
+      body: JSON.stringify({ triggerPhrase, headerText }),
     });
     if (res.ok) {
       const data = await res.json();
       setTriggerPhrase(data.triggerPhrase);
-      setLogoUrl(data.logoUrl ?? "");
+      setHeaderText(data.headerText ?? "");
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } else {
@@ -68,14 +68,16 @@ export function DashboardClient({
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Settings</h2>
         <div className="space-y-5">
           <label className="block">
-            <span className="block text-sm font-medium text-gray-800 mb-1">Logo URL</span>
+            <span className="block text-sm font-medium text-gray-800 mb-1">Header text</span>
             <input
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder={`No logo set, showing @${username}`}
+              type="text"
+              value={headerText}
+              onChange={(e) => setHeaderText(e.target.value)}
+              maxLength={80}
+              placeholder={`@${username}`}
               className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
+            <span className="mt-1 block text-xs text-gray-500">{headerText.trim().length}/80</span>
           </label>
 
           <label className="block">

@@ -9,7 +9,7 @@ export default async function DashboardPage() {
 
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: session.user.id },
-    select: { username: true, triggerPhrase: true, logoUrl: true, lastSyncedAt: true },
+    select: { username: true, triggerPhrase: true, headerText: true, lastSyncedAt: true },
   });
 
   return (
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
       <DashboardClient
         username={user.username}
         initialTriggerPhrase={user.triggerPhrase}
-        initialLogoUrl={user.logoUrl}
+        initialHeaderText={user.headerText}
         lastSyncedAt={user.lastSyncedAt?.toISOString() ?? null}
       />
     </main>
