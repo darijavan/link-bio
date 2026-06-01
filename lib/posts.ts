@@ -16,12 +16,16 @@ export interface PostPage {
   nextCursor: string | null;
 }
 
-function makeGetPostsPage(userId: string) {
+export type PostMediaFilter = "VIDEO";
+
+function makeGetPostsPage(userId: string, mediaType?: PostMediaFilter) {
   return unstable_cache(
     async (cursor?: string): Promise<PostPage> => {
-      const where = cursor
-        ? { userId, postedAt: { lt: new Date(cursor) } }
-        : { userId };
+      const where = {
+        userId,
+        ...(mediaType ? { mediaType } : {}),
+        ...(cursor ? { postedAt: { lt: new Date(cursor) } } : {}),
+      };
 
       const rows = await prisma.post.findMany({
         where,
@@ -50,11 +54,15 @@ function makeGetPostsPage(userId: string) {
         nextCursor: hasMore ? posts[posts.length - 1].postedAt : null,
       };
     },
-    [`posts-page-${userId}`],
+    [`posts-page-${userId}-${mediaType ?? "ALL"}`],
     { tags: [`posts-${userId}`] }
   );
 }
 
-export async function getPostsPage(userId: string, cursor?: string): Promise<PostPage> {
-  return makeGetPostsPage(userId)(cursor);
+export async function getPostsPage(
+  userId: string,
+  cursor?: string,
+  mediaType?: PostMediaFilter
+): Promise<PostPage> {
+  return makeGetPostsPage(userId, mediaType)(cursor);
 }
