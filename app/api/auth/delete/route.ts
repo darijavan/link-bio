@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     });
 
     const confirmationCode = randomBytes(12).toString("hex");
-    const baseUrl = process.env.NEXTAUTH_URL ?? "https://link-bio-vert.vercel.app";
+    const baseUrl = process.env.NEXTAUTH_URL;
 
     return NextResponse.json({
       url: `${baseUrl}/deletion-status?code=${confirmationCode}&id=${payload.user_id}`,
