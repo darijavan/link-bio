@@ -29,7 +29,7 @@ Prisma 7 with `@prisma/adapter-pg` (driver adapter — required in Prisma 7, no 
 
 ### Auth
 
-NextAuth v5 (`next-auth@beta`) with a custom Instagram OAuth provider. Facebook App credentials are used (`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`). On sign-in, the short-lived token is exchanged for a 60-day long-lived token and stored on the `User` row. The session `user.id` maps to `User.id` in Postgres (not the NextAuth internal session ID).
+NextAuth v5 (`next-auth@beta`) with a custom Instagram OAuth provider. Facebook App credentials are used (`INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`). On sign-in, the short-lived token is exchanged for a 60-day long-lived token and stored on the `User` row. The session `user.id` maps to `User.id` in Postgres (not the NextAuth internal session ID).
 
 ### Data sync
 
@@ -47,6 +47,6 @@ Post queries use `unstable_cache` (from `next/cache`) tagged `posts-<userId>`. B
 
 ### Key env vars
 
-`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`, `CRON_SECRET`
+`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`, `CRON_SECRET`
 
 The cron job runs hourly via Vercel Cron (`vercel.json`) and is authenticated with `Authorization: Bearer <CRON_SECRET>`.

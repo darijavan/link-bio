@@ -70,14 +70,17 @@ This is where you tell Meta which URLs are allowed to receive the auth callback.
 
 ### 5. Note your App Credentials
 
-1. Go to **App Settings → Basic** in the left sidebar
-2. Copy **App ID** → this is your `FACEBOOK_APP_ID`
-3. Click **Show** next to **App Secret** → this is your `FACEBOOK_APP_SECRET`
-4. Paste both into your `.env` file:
+> ⚠️ For "Instagram API with Instagram Login", the credentials you need are the **Instagram App ID** and **Instagram App Secret** — not the general Facebook App ID shown at the top of the dashboard. They are found in a different place.
+
+1. Go to **Instagram → API setup with Instagram login** in the left sidebar
+2. Scroll to **Business login settings**
+3. Copy **Instagram App ID** → this is your `INSTAGRAM_APP_ID`
+4. Click **Show** next to **Instagram App Secret** → this is your `INSTAGRAM_APP_SECRET`
+5. Paste both into your `.env` file:
 
    ```bash
-   FACEBOOK_APP_ID="123456789012345"
-   FACEBOOK_APP_SECRET="abc123..."
+   INSTAGRAM_APP_ID="123456789012345"
+   INSTAGRAM_APP_SECRET="abc123..."
    ```
 
 ### 6. Add Your Instagram Account as a Test User
@@ -103,8 +106,8 @@ Local testing **is possible** as long as your Instagram account is added as a te
 DATABASE_URL="your-neon-or-supabase-connection-string"
 NEXTAUTH_SECRET="run: openssl rand -base64 32"
 NEXTAUTH_URL="http://localhost:3000"
-FACEBOOK_APP_ID="your-app-id"
-FACEBOOK_APP_SECRET="your-app-secret"
+INSTAGRAM_APP_ID="your-app-id"
+INSTAGRAM_APP_SECRET="your-app-secret"
 CRON_SECRET="any-random-string"
 ```
 
@@ -152,8 +155,8 @@ git push origin main
    | `DATABASE_URL` | your Neon/Supabase connection string |
    | `NEXTAUTH_SECRET` | output of `openssl rand -base64 32` |
    | `NEXTAUTH_URL` | `https://your-project.vercel.app` |
-   | `FACEBOOK_APP_ID` | from Meta App Dashboard |
-   | `FACEBOOK_APP_SECRET` | from Meta App Dashboard |
+   | `INSTAGRAM_APP_ID` | from Meta App Dashboard |
+   | `INSTAGRAM_APP_SECRET` | from Meta App Dashboard |
    | `CRON_SECRET` | any random string |
 
 5. Click **Deploy**

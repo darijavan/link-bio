@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing signed_request" }, { status: 400 });
     }
 
-    const payload = parseSignedRequest(signedRequest, process.env.FACEBOOK_APP_SECRET!);
+    const payload = parseSignedRequest(signedRequest, process.env.INSTAGRAM_APP_SECRET!);
 
     // Clear the access token — future syncs will fail gracefully
     await prisma.user.updateMany({

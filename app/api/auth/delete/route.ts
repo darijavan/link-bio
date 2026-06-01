@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing signed_request" }, { status: 400 });
     }
 
-    const payload = parseSignedRequest(signedRequest, process.env.FACEBOOK_APP_SECRET!);
+    const payload = parseSignedRequest(signedRequest, process.env.INSTAGRAM_APP_SECRET!);
 
     // Delete user and all associated posts (cascade is configured in the schema)
     await prisma.user.deleteMany({

@@ -5,7 +5,7 @@ import { CustomInstagramProvider } from "@/lib/auth/instagram-provider";
 
 async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ token: string; expiresAt: Date }> {
   const res = await fetch(
-    `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.FACEBOOK_APP_SECRET}&access_token=${shortLivedToken}`
+    `https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_APP_SECRET}&access_token=${shortLivedToken}`
   );
   if (!res.ok) throw new Error("Failed to exchange Instagram token");
   const data = await res.json();
@@ -16,8 +16,8 @@ async function exchangeForLongLivedToken(shortLivedToken: string): Promise<{ tok
 const config: NextAuthConfig = {
   providers: [
     CustomInstagramProvider({
-      clientId: process.env.FACEBOOK_APP_ID,
-      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      clientId: process.env.INSTAGRAM_APP_ID,
+      clientSecret: process.env.INSTAGRAM_APP_SECRET,
     }),
   ],
   callbacks: {

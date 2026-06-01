@@ -33,16 +33,12 @@ Copy `.env` and fill in the values:
 DATABASE_URL="postgresql://..."
 NEXTAUTH_SECRET="..."          # generate with: openssl rand -base64 32
 NEXTAUTH_URL="http://localhost:3000"
-FACEBOOK_APP_ID="..."          # from developers.facebook.com
-FACEBOOK_APP_SECRET="..."
+INSTAGRAM_APP_ID="..."          # Instagram > API setup with Instagram login > Business login settings
+INSTAGRAM_APP_SECRET="..."      # same location — not the general Facebook App Secret
 CRON_SECRET="..."              # any random string
 ```
 
-To get `FACEBOOK_APP_ID` / `FACEBOOK_APP_SECRET`:
-- Create a Facebook App at [developers.facebook.com](https://developers.facebook.com)
-- Add the **Instagram Graph API** product
-- Request scopes: `instagram_basic`, `pages_show_list`
-- Add `http://localhost:3000/api/auth/callback/instagram` as a valid OAuth redirect URI
+To get `INSTAGRAM_APP_ID` / `INSTAGRAM_APP_SECRET`, see [`docs/meta-app-setup.md`](./docs/meta-app-setup.md). Note these are the **Instagram** App ID and Secret found under Instagram → API setup with Instagram login → Business login settings — not the general Facebook App ID at the top of the Meta dashboard.
 
 ### 3. Set up the database
 
