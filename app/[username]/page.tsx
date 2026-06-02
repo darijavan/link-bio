@@ -11,7 +11,12 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const { username } = await params;
   const user = await getPublicProfile(username);
-  return { title: user?.headerText?.trim() || `@${username}` };
+  return {
+    title: user?.headerText?.trim() || `@${username}`,
+    icons: user?.profilePictureUrl
+      ? { icon: user.profilePictureUrl }
+      : undefined,
+  };
 }
 
 export default async function ProfilePage({ params }: Props) {
