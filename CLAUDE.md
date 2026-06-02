@@ -50,3 +50,13 @@ Post queries use `unstable_cache` (from `next/cache`) tagged `posts-<userId>`. B
 `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`, `CRON_SECRET`
 
 The cron job runs hourly via Vercel Cron (`vercel.json`) and is authenticated with `Authorization: Bearer <CRON_SECRET>`.
+
+### Meta App Dashboard — required callback URLs
+
+Both endpoints are implemented and must be registered in the Meta App Dashboard before app review:
+
+- **Deauthorize Callback URL** → `https://<NEXTAUTH_URL>/api/auth/deauthorize`  
+  Clears the user's access token when they revoke Instagram permissions. Route: `app/api/auth/deauthorize/route.ts`.
+
+- **Data Deletion Request URL** → `https://<NEXTAUTH_URL>/api/auth/delete`  
+  Deletes the user and all posts; returns a confirmation URL at `/deletion-status`. Route: `app/api/auth/delete/route.ts`.
