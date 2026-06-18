@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: user?.headerText?.trim() || `@${username}`,
     icons: user?.profilePictureUrl
-      ? { icon: user.profilePictureUrl }
+      ? { icon: `/api/avatar/${username}` }
       : undefined,
   };
 }
@@ -34,7 +34,7 @@ export default async function ProfilePage({ params }: Props) {
         <a href={`https://www.instagram.com/${user.username}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
           {user.profilePictureUrl && (
             <img
-              src={user.profilePictureUrl}
+              src={`/api/avatar/${user.username}`}
               alt={`${user.username} profile picture`}
               className="h-8 w-8 rounded-full object-cover"
             />

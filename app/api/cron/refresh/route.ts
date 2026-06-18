@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { syncPostsForUser, refreshTokenIfNeeded } from "@/lib/instagram";
+import { syncPostsForUser, refreshTokenIfNeeded, refreshProfilePicture } from "@/lib/instagram";
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
   const results = await Promise.allSettled(
     (users as { id: string }[]).map(async (user) => {
       await refreshTokenIfNeeded(user.id);
+      await refreshProfilePicture(user.id);
       return syncPostsForUser(user.id);
     })
   );

@@ -104,6 +104,32 @@ export async function syncPostsForUser(userId: string): Promise<number> {
   return synced;
 }
 
+export async function refreshProfilePicture(userId: string): Promise<string | null> {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+    select: { accessToken: true },
+  });
+
+  const url = new URL("https://graph.instagram.com/me");
+  url.search = new URLSearchParams({
+    fields: "profile_picture_url",
+    access_token: user.accessToken,
+  }).toString();
+
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  const profilePictureUrl: string | null = data.profile_picture_url ?? null;
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { profilePictureUrl },
+  });
+
+  return profilePictureUrl;
+}
+
 export async function refreshTokenIfNeeded(userId: string): Promise<void> {
   const user = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
   const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
